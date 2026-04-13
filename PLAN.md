@@ -237,8 +237,8 @@ Each phase produces a runnable artifact and ends with a commit tagged `phase-N`.
 - [ ] `rook index <path>` works against `~/code/claude-palace`
 - [ ] Postgres has populated `repos`, `documents`, `symbols`, `occurrences` tables
 - [ ] `psql` can `SELECT display_name FROM symbols WHERE repo_id = 1 LIMIT 20;` and see real function names
-- [ ] Unit tests for the SCIP protobuf decoder path
-- [ ] Integration test using testcontainers-go
+- [x] Unit tests for the SCIP protobuf decoder path
+- [x] Integration test using testcontainers-go
 
 **Teaching goals for Dalton.** Go project layout, cobra CLI patterns, pgx connection pooling, working with a real protobuf schema, shelling out to subprocesses safely.
 
