@@ -1,0 +1,31 @@
+# binaries
+/rook
+/rook.exe
+/bin/
+
+# test + coverage
+*.test
+*.out
+coverage.*
+
+# go workspace
+go.work
+go.work.sum
+
+# editor
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# env
+.env
+.env.local
+
+# local scratch
+NOTES.md
+tmp/
+*.scip
+
+# claude code local settings
+.claude/

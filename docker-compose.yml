@@ -1,0 +1,36 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: rook-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: rook
+      POSTGRES_PASSWORD: rook
+      POSTGRES_DB: rook
+    ports:
+      - "5432:5432"
+    volumes:
+      - rook_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U rook -d rook"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7
+    container_name: rook-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - rook_redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  rook_pg_data:
+  rook_redis_data:
