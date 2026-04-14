@@ -234,9 +234,9 @@ Each phase produces a runnable artifact and ends with a commit tagged `phase-N`.
 **Goal.** Go CLI that runs scip-python against a repo and loads the resulting SCIP index into Postgres.
 
 **Exit criteria.**
-- [ ] `rook index <path>` works against `~/code/claude-palace`
-- [ ] Postgres has populated `repos`, `documents`, `symbols`, `occurrences` tables
-- [ ] `psql` can `SELECT display_name FROM symbols WHERE repo_id = 1 LIMIT 20;` and see real function names
+- [x] `rook index <path>` works against `~/code/claude-palace`
+- [x] Postgres has populated `repos`, `documents`, `symbols`, `occurrences` tables
+- [x] `psql` can `SELECT display_name FROM symbols WHERE repo_id = 1 LIMIT 20;` and see real function names
 - [x] Unit tests for the SCIP protobuf decoder path
 - [x] Integration test using testcontainers-go
 
