@@ -154,7 +154,7 @@ func TestIngestTransactionEndToEnd(t *testing.T) {
 
 func applyMigration(t *testing.T, ctx context.Context, url string) {
 	t.Helper()
-	data, err := os.ReadFile("../../migrations/0001_init.sql")
+	data, err := os.ReadFile("migrations/0001_init.sql")
 	if err != nil {
 		t.Fatalf("read migration: %v", err)
 	}

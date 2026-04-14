@@ -25,8 +25,8 @@ docker-up:
 docker-down:
 	docker compose down
 
-migrate:
-	goose -dir ./migrations postgres "$(ROOK_DATABASE_URL)" up
+migrate: build
+	./$(BINARY) migrate
 
 clean:
 	rm -f $(BINARY) $(BINARY).exe

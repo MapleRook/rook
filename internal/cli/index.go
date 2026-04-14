@@ -20,6 +20,7 @@ func newIndexCmd() *cobra.Command {
 		indexer     string
 		keepIndex   bool
 		workers     int
+		scipFile    string
 	)
 	cmd := &cobra.Command{
 		Use:   "index <path>",
@@ -32,6 +33,7 @@ func newIndexCmd() *cobra.Command {
 				indexer:     indexer,
 				keepIndex:   keepIndex,
 				workers:     workers,
+				scipFile:    scipFile,
 			})
 		},
 	}
@@ -39,6 +41,7 @@ func newIndexCmd() *cobra.Command {
 	cmd.Flags().StringVar(&indexer, "indexer", "auto", "SCIP indexer to run: auto | scip-python | scip-typescript")
 	cmd.Flags().BoolVar(&keepIndex, "keep-index", false, "Keep the intermediate index.scip file on disk")
 	cmd.Flags().IntVar(&workers, "workers", 4, "Document-level worker count for ingest")
+	cmd.Flags().StringVar(&scipFile, "scip", "", "Ingest a pre-built SCIP index from this path instead of running an indexer")
 	return cmd
 }
 
@@ -48,6 +51,7 @@ type indexOptions struct {
 	indexer     string
 	keepIndex   bool
 	workers     int
+	scipFile    string
 }
 
 func runIndex(ctx context.Context, opts indexOptions) error {
@@ -70,18 +74,25 @@ func runIndex(ctx context.Context, opts indexOptions) error {
 	}
 	defer st.Close()
 
-	runner := ingest.NewRunner(opts.indexer)
 	fmt.Printf("indexing %s\n", filepath.Base(absRepo))
-
 	start := time.Now()
-	indexPath, cleanup, err := runner.Run(ctx, absRepo)
-	if err != nil {
-		return fmt.Errorf("run indexer: %w", err)
+
+	var indexPath string
+	var cleanup func()
+	if opts.scipFile != "" {
+		indexPath = opts.scipFile
+		fmt.Printf("  using existing scip index at %s\n", indexPath)
+	} else {
+		runner := ingest.NewRunner(opts.indexer)
+		indexPath, cleanup, err = runner.Run(ctx, absRepo)
+		if err != nil {
+			return fmt.Errorf("run indexer: %w", err)
+		}
+		if !opts.keepIndex {
+			defer cleanup()
+		}
+		fmt.Printf("  ran %s\n", runner.Name())
 	}
-	if !opts.keepIndex {
-		defer cleanup()
-	}
-	fmt.Printf("  ran %s\n", runner.Name())
 
 	result, err := ingest.Load(ctx, st, ingest.LoadOptions{
 		RepoName:  filepath.Base(absRepo),
